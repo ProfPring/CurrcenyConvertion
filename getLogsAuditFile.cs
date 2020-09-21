@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace WpfApp1
 {
     public class getLogsAuditFile 
@@ -18,28 +19,30 @@ namespace WpfApp1
          return System.IO.File.ReadAllLines(path);
         }
         
-        public IDictionary<DateTime,string> getalllogdates()
+        public List<KeyValuePair<DateTime, string>> getalllogdates()
         {
             var auditlogs = this.auditlogs();
-            IDictionary <DateTime, string> DatesandDataDict = new Dictionary<DateTime, string> ();
+            List<KeyValuePair<DateTime, string>> DatesandDataDict = new List<KeyValuePair<DateTime, string>>();
 
             string value = "";
+            DateTime date = new DateTime();
             foreach (var audit in auditlogs)
             {
-                if (audit.StartsWith("Conversion"))
-                {
-                    value = audit;
-                }
                 try
                 {
-                    DateTime date = DateTime.Parse(audit);
-                    DatesandDataDict.Add(date, value);
+                    if (audit.StartsWith("Conversion"))
+                    {
+                        value = audit;
+                    }
+                    date = DateTime.Parse(audit);
+                    DatesandDataDict.Add(new KeyValuePair<DateTime, string>(date, value));
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                }
+                }  
             }
+            
             return DatesandDataDict; 
         }
 
